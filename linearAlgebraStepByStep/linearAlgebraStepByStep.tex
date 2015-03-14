@@ -1,11 +1,13 @@
 \documentclass[a4paper]{article}
 
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage[usenames,dvipsnames]{color}
 
 \setlength{\parindent}{0pt}
+\setlength{\parskip}{0.75ex plus 0.5ex minus 0.3ex}
 \setcounter{secnumdepth}{0} % Do not number sections
 \setcounter{tocdepth}{2}
 
@@ -103,10 +105,10 @@ Plot
 pp1= plot_implicit(eq1)
 pp2= plot_implicit(eq2)
 pp1.extend(pp2)
-pp1.save('ex4a.pdf')
+pp1.save('figs/ex4a.pdf')
 \end{verbatim}
 
-\includegraphics[width=\linewidth]{ex4a.pdf}
+\includegraphics[width=\linewidth]{figs/ex4a.pdf}
 
 \textbf{Exercises 1.1 5b}
 % ............
@@ -118,10 +120,10 @@ eq2= Eq(8*x + 4*y, 16)
 pp1= plot_implicit(eq1)
 pp2= plot_implicit(eq2)
 pp1.extend(pp2)
-pp1.save('ex5b.pdf')
+pp1.save('figs/ex5b.pdf')
 \end{verbatim}
 
-\includegraphics[width=\linewidth]{ex5b.pdf}
+\includegraphics[width=\linewidth]{figs/ex5b.pdf}
 
 \subsection{Solve by row echelon form}
 % ------------------------------------
@@ -218,7 +220,10 @@ Augmented matrix:
 Reduced row echelon form with solutions in the last column:
 
 \begin{equation}
-\begin{pmatrix}\left[\begin{matrix}1 & 0 & 0 & -3\\0 & 1 & 0 & 1\\0 & 0 & 1 & \frac{1}{2}\end{matrix}\right], & \begin{bmatrix}0, & 1, & 2\end{bmatrix}\end{pmatrix}
+\begin{pmatrix}\left[\begin{matrix}1 & 0 & 0 & -3 \\
+                                   0 & 1 & 0 & 1 \\
+                                   0 & 0 & 1 &
+\frac{1}{2}\end{matrix}\right], & \begin{bmatrix}0, & 1, & 2\end{bmatrix}\end{pmatrix}
 \end{equation}
 
 In \sympy:
@@ -245,7 +250,105 @@ solve([eq1, eq2, eq3])
 \subsection{Vector arithmetic}
 % ----------------------------
 
-\subsubsection{Exercise 1.3}
+\subsubsection{Exercise 1.3.1}
+
+Given two vectors:
+
+\begin{verbatim}
+va= Matrix([2, 0])
+vb= Matrix([2, 1])
+
+fig = plt.figure()
+fig.add_subplot(111)
+
+\end{verbatim}
+
+plot the results of the operations 
+
+\subsubsection{(a-e)}
+
+\begin{verbatim}
+vA= va + vb          # [4 1]
+vB= va - vb          # [0 -1]
+vC= 3 * va           # [6 0]
+vD= -1/2 * vb        # [-1 -0.5]
+vE= 3*va - 1/2 * vb  # [5 -0.5]
+\end{verbatim}
+
+And plot vectors
+
+\includegraphics[width=\linewidth]{figs/ex1_3.pdf}
+
+\begin{verbatim}
+plt.arrow(0, 0, float(va[0]), float(va[1]), lw= 3, color= 'b', head_width=0.05)
+plt.arrow(0, 0, float(vb[0]), float(vb[1]), lw= 3, color= 'b', head_width=0.05)
+plt.arrow(0, 0, float(vA[0]), float(vA[1]), lw= 2, color= 'r', head_width=0.05)
+plt.arrow(0, 0, float(vB[0]), float(vB[1]), lw= 2, color= 'black', head_width=0.05)
+plt.arrow(0, 0, float(vC[0]), float(vC[1]), lw= 2, color= 'orange', head_width=0.05)
+plt.arrow(0, 0, float(vD[0]), float(vD[1]), lw= 2, color= 'grey', head_width=0.05)
+plt.arrow(0, 0, float(vE[0]), float(vE[1]), lw= 2, color= 'purple', head_width=0.05)
+plt.xlim(-2.1, 6.1)
+plt.ylim(-1.1, 1.1)
+plt.grid()
+plt.savefig('figs/ex1_3.pdf')
+plt.close()
+\end{verbatim}
+
+\subsubsection{Exercise 1.3.8}
+% ............................
+Show that $x\mathbf{u} + y\mathbf{v} = \mathbf{w}$ where
+$\mathbf{u}= (1\ 0)^{T}$, $\mathbf{v}= (0\ 1)^{T}$, and $\mathbf{w}= (x\ y)^{T}$.
+
+This is a consequence of $x(1\ 0) = (x\ 0)$ and $y(0\ 1) = (y\ 0)$. So that
+$(x\ 0) + (0\ y) = (x\ y)$
+
+\begin{verbatim}
+x, y= symbols('x y')
+u= Matrix([1, 0])
+v= Matrix([0, 1])
+w= Matrix([x, y])
+Eq(x*u + y*v, w) # True
+\end{verbatim}
+
+\subsubsection{Exercise 1.3.12}
+% .............................
+
+Find the real numbers x, y and z, if
+
+\begin{equation}
+\left[\begin{matrix}x - 2 z\\2 x + y\\- y + 6 z\end{matrix}\right] = \left[\begin{matrix}5\\3\\17\end{matrix}\right]
+\end{equation}
+
+Which is solved for:
+
+\begin{equation}
+sols= \begin{bmatrix}\begin{Bmatrix}x : 7, & y : -11, & z : 1\end{Bmatrix}\end{bmatrix}
+\end{equation}
+
+\begin{verbatim}
+eq1= Eq(x * Matrix([1, 2, 0]) + y * Matrix([0, 1, -1]) + z * Matrix([-2, 0, 6]),
+    Matrix([5, 3, 17]))
+sols= solve(eq1)
+\end{verbatim}
+
+\subsubsection{Exercise 1.3.12}
+% .............................
+
+Show that vectors \textbf{u} and \textbf{v} in space $\mathbb{R}^n$ can be
+$\mathbf{u} \cdot{} \mathbf{v} = \mathbf{0}$ even if neither \textbf{u} or \textbf{v}
+are 0 vectors.
+
+Set:
+
+\begin{verbatim}
+u= Matrix([-1, 1])
+v= Matrix([1, 1])
+u.dot(v) == 0 # True
+\end{verbatim}
+
+\subsection{Linear equations and Matrices}
+% ----------------------------------------
+
 
 %%%%%%%%%%%%%%
 \end{document}

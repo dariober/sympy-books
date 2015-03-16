@@ -72,7 +72,7 @@ const= Matrix([2, 0])
 [coeffs, const]
 \end{verbatim}
 
-\begin{equation}\label{eq:}
+\begin{equation}\label{eq:na}
 \begin{bmatrix}\left[\begin{matrix}e & - e\\e & e\end{matrix}\right], & \left[\begin{matrix}2\\0\end{matrix}\right]\end{bmatrix}
 \end{equation}
 
@@ -90,7 +90,7 @@ coeffs.solve(const)
 Plot the graphs of these linear equations
 % .....................................................
 
-\begin{equation}
+\begin{equation}\label{eq:na}
 \begin{matrix}2 x + y = 3\\x - y = 7\end{matrix}
 \end{equation}
 
@@ -144,7 +144,7 @@ entry in its column \footnote{http://en.wikipedia.org/wiki/Row\_echelon\_form}.
 
 \subsubsection{Exercises 1.2 2a}
 
-\begin{equation}
+\begin{equation}\label{eq:na}
 \begin{matrix}x + 2 y + 3 z = 12\\2 x - y + 5 z = 3\\3 x + 3 y + 6 z = 21\end{matrix}
 \end{equation}
 
@@ -157,7 +157,7 @@ eq3= Eq(3*x + 3*y + 6*z, 21)
 Represent the linear systen as \textit{augmented} matrix, where the last column
 holds the constants:
 
-\begin{equation}
+\begin{equation}\label{eq:na}
 M= \left[\begin{matrix}1 & 2 & 3 & \textit{12}\\
                        2 & -1 & 5 & \textit{3}\\
                        3 & 3 & 6 & \textit{21}\end{matrix}\right]
@@ -179,7 +179,7 @@ M= const.col_insert(0, M)
 
 In reduced row echelon form, with indexes of the pivot variables on the right:
 
-\begin{equation}
+\begin{equation}\label{eq:na}
 RREF= \begin{pmatrix}\left[\begin{matrix}1 & 0 & 0 & 1\\0 & 1 & 0 & 4\\0 & 0 & 1 & 1\end{matrix}\right], & \begin{bmatrix}0, & 1, & 2\end{bmatrix}\end{pmatrix}
 \end{equation}
 
@@ -203,7 +203,7 @@ solve([eq1, eq2, eq3])
 
 Linear system:
 
-\begin{equation}
+\begin{equation}\label{eq:na}
 \begin{matrix}
     - 2 x + 3 y - 2 z = 8 \\
     - x + 2 y - 10 z = 0 \\
@@ -213,13 +213,13 @@ Linear system:
 
 Augmented matrix:
 
-\begin{equation}
+\begin{equation}\label{eq:na}
 \left[\begin{matrix}-2 & 3 & -2 & 8\\-1 & 2 & -10 & 0\\5 & -7 & 4 & -20\end{matrix}\right]
 \end{equation}
 
 Reduced row echelon form with solutions in the last column:
 
-\begin{equation}
+\begin{equation}\label{eq:na}
 \begin{pmatrix}\left[\begin{matrix}1 & 0 & 0 & -3 \\
                                    0 & 1 & 0 & 1 \\
                                    0 & 0 & 1 &
@@ -257,10 +257,6 @@ Given two vectors:
 \begin{verbatim}
 va= Matrix([2, 0])
 vb= Matrix([2, 1])
-
-fig = plt.figure()
-fig.add_subplot(111)
-
 \end{verbatim}
 
 plot the results of the operations 
@@ -315,13 +311,13 @@ Eq(x*u + y*v, w) # True
 
 Find the real numbers x, y and z, if
 
-\begin{equation}
+\begin{equation}\label{eq:na}
 \left[\begin{matrix}x - 2 z\\2 x + y\\- y + 6 z\end{matrix}\right] = \left[\begin{matrix}5\\3\\17\end{matrix}\right]
 \end{equation}
 
 Which is solved for:
 
-\begin{equation}
+\begin{equation}\label{eq:}
 sols= \begin{bmatrix}\begin{Bmatrix}x : 7, & y : -11, & z : 1\end{Bmatrix}\end{bmatrix}
 \end{equation}
 
@@ -349,6 +345,210 @@ u.dot(v) == 0 # True
 \subsection{Linear equations and Matrices}
 % ----------------------------------------
 
+\subsubsection{Exercise 1.4.1}
+% .............................
+
+Given matrix \textbf{B}, note that $3\mathbf{B} = \mathbf{B} + \mathbf{B} + \mathbf{B}$
+
+\begin{equation}
+\left[\begin{matrix}6 & -1\\5 & 3\end{matrix}\right]
+\end{equation}
+
+\begin{verbatim}
+B= Matrix([[6, -1], [5, 3]])
+3*B == (B + B + B)
+\end{verbatim}
+
+\subsubsection{Exercise 1.4.6}
+% .............................
+
+Note how matrx multiplication can result in zero matrix:
+
+\begin{equation}
+\left[\begin{matrix}5 & -1 & -2\\10 & -2 & -4\\15 & -3 & -6\end{matrix}\right]
+\left[\begin{matrix}1 & 1 & 3\\1 & -1 & -1\\2 & 3 & 8\end{matrix}\right]
+= \left[\begin{matrix}0 & 0 & 0\\0 & 0 & 0\\0 & 0 & 0\end{matrix}\right]
+\end{equation}
+
+\begin{verbatim}
+A= Matrix(3, 3, [5, -1, -2, 10, -2, -4, 15, -3, -6])
+B= Matrix(3, 3, [1, 1, 3, 1, -1, -1, 2, 3, 8])
+Z= A * B
+\end{verbatim}
+
+\subsubsection{Exercise 1.4.8}
+% ............................
+
+$\mathbf{x}_n = \mathbf{A}^n\mathbf{x}$ Describes a \textbf{discrete dynamical
+system}. Apply this formula to
+
+\begin{equation}\label{eq:ex148}
+A = \left[\begin{matrix}0.5 & 0.5\\0.5 & 0.5\end{matrix}\right]
+\end{equation}
+
+\begin{verbatim}
+A= Matrix(2, 2, [1/2, 1/2, 1/2, 1/2])
+\end{verbatim}
+
+For the matrix in \ref{eq:ex148} $A^n = A$:
+
+\begin{verbatim}
+A**2 == A # True
+A**3 == A # True
+A**10 == A # True
+\end{verbatim}
+
+matrix in \ref{eq:ex148} is a Markov matrix since the colum sums equal 1.
+
+\subsubsection{Exercise 1.4.10}
+% .............................
+
+Determine the image of the matrix \textbf{F} after transformation \textbf{AF}:
+
+\begin{equation}
+A = \left[\begin{matrix}1 & 0.2\\0 & 1\end{matrix}\right]
+\end{equation}
+
+\begin{equation}
+F = \left[\begin{matrix}1 & 1 & 2 & 2 & 1.4 & 1.4 & 2 & 2 & 1.4 & 1.4\\1 & 3 & 3 & 2.6 & 2.6 & 2 & 2 & 1.6 & 1.6 & 1\end{matrix}\right]
+\end{equation}
+
+\begin{equation}\label{eq:}
+AF = \left[\begin{matrix}1.2 & 1.6 & 2.6 & 2.52 & 1.92 & 1.8 & 2.4 & 2.32 & 1.72 & 1.6\\1 & 3 & 3 & 2.6 & 2.6 & 2 & 2 & 1.6 & 1.6 & 1\end{matrix}\right]
+\end{equation}
+
+\includegraphics[width=\linewidth]{figs/1_4_10.pdf}
+
+This is showing that the matrix operation $\mathbf{AF} = \mathbf{F_2}$ can be seen as
+$\mathbf{f(F)}= \mathbf{F_2}$. That is, the matrix on the left-hand (\textbf{A})
+side acts like a function that transforms its argument (\textbf{F}).
+
+\begin{verbatim}
+A= Matrix([[1, 0.2], [0, 1]])
+F= Matrix([
+    [1, 1, 2, 2, 1.4, 1.4, 2, 2, 1.4, 1.4],
+    [1, 3, 3, 2.6, 2.6, 2, 2, 1.6, 1.6, 1]])
+
+AF= A*F
+
+verts_F= []
+for i in range(F.cols):
+    verts_F.append((F[0, i], F[1, i]))
+verts_AF= []
+for i in range(AF.cols):
+    verts_AF.append((AF[0, i], AF[1, i]))
+
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+poly_F = patches.Polygon(verts_F, color= 'b', alpha= 0.5)
+poly_AF = patches.Polygon(verts_AF, color= 'r', alpha= 0.5)
+ax.set_xlim((0.5, 3))
+ax.set_ylim((0.5, 3.5))
+ax.add_patch(poly_F)
+ax.add_patch(poly_AF)
+plt.grid()
+plt.savefig('figs/1_4_10.pdf')
+\end{verbatim}
+
+\subsubsection{Exercise 1.4.11}
+% .............................
+
+\begin{verbatim}
+O= Matrix.zeros(2, 1)
+X= Matrix([x, y])
+\end{verbatim}
+
+\begin{verbatim}
+A= Matrix([[1, 2], [3, 5]])
+xy= A.solve(O) # x:0, y:0
+# Or
+xy= A.LUsolve(O) 
+# Or
+solve(A*X)
+
+A= Matrix([[2, 7], [3, 15]]) # x:0, y:0
+xy= A.solve(O)
+
+A= Matrix([[1, 4], [3, 12]]) # Linearly dependent!
+xy= A.solve(O)
+>>> ValueError: Matrix det == 0; not invertible.
+\end{verbatim}
+
+\subsubsection{Exercise 1.4.12}
+% .............................
+
+Determine whether vector \textbf{w} is a linear combination of vector \textbf{u}
+and \textbf{v}.
+
+Effectively this is asking if the equation $x\mathbf{u} + y\mathbf{v} = \mathbf{w}$
+can be resolved.
+
+
+\begin{itemize}
+\item Create an augmented matrix as [u, v, w].
+\item Transform the augmented matrix in row echelon form.
+\item If the matrix is in reduced REF, then the three vectors are linearly
+independent and \textbf{w} $\neq$ \textbf{u} + \textbf{v} (\textbf{w} is not a linear
+combination of \textbf{u} and \textbf{v}).
+
+Alternatively check the rank of the augmented matrix. If R = dim(A) then there is
+linear independence.
+\end{itemize}
+
+\begin{verbatim}
+w= Matrix(2, 1, [1, 0])
+u= Matrix(2, 1, [5, 8])
+v= Matrix(2, 1, [2, 4])
+A=  w.col_insert(0, v).col_insert(0, u)
+A.rref()
+\end{verbatim}
+
+\begin{equation}
+REF= \begin{pmatrix}\left[\begin{matrix}1 & 0 & 1\\0 & 1 & -2\end{matrix}\right], & \begin{bmatrix}0, & 1\end{bmatrix}\end{pmatrix}
+\end{equation}
+
+\textbf{w} is a linear combination. In fact $1\mathbf{u} -2\mathbf{v}= \mathbf{w}$
+
+\begin{verbatim}
+w= Matrix(2, 1, [0, 1])
+u= Matrix(2, 1, [5, 8])
+v= Matrix(2, 1, [2, 4])
+A=  w.col_insert(0, v).col_insert(0, u)
+A.rref()
+\end{verbatim}
+
+\begin{equation}\label{eq:}
+\begin{pmatrix}\left[\begin{matrix}1 & 0 & - \frac{1}{2}\\0 & 1 & \frac{5}{4}\end{matrix}\right], & \begin{bmatrix}0, & 1\end{bmatrix}\end{pmatrix}
+\end{equation}
+
+\begin{verbatim}
+w= Matrix(3, 1, [1, 2, 3])
+u= Matrix(3, 1, [1, 0, 0])
+v= Matrix(3, 1, [0, 1, 0])
+A=  w.col_insert(0, v).col_insert(0, u)
+A.rref()
+\end{verbatim}
+
+\begin{equation}
+REF= \begin{pmatrix}\left[\begin{matrix}1 & 0 & 0\\0 & 1 & 0\\0 & 0 & 1\end{matrix}\right], & \begin{bmatrix}0, & 1, & 2\end{bmatrix}\end{pmatrix}
+\end{equation}
+
+$REF$ \emph{is} in RREF therefore \textbf{w} cannot be a linear combination. In fact
+$0\mathbf{u} + 0\mathbf{v} \neq [1\ 2\ 3]^T$
+
+\begin{verbatim}
+w= Matrix(3, 1, [1, 2, 3])
+u= Matrix(3, 1, [4, 8, 0])
+v= Matrix(3, 1, [1, 2, -3/7])
+A=  w.col_insert(0, v).col_insert(0, u)
+A.rref()
+\end{verbatim}
+
+\begin{equation}\label{eq:}
+\begin{pmatrix}\left[\begin{matrix}1 & 0 & 2.0\\0 & 1.0 & -7.0\\0 & 0 & 0\end{matrix}\right], & \begin{bmatrix}0, & 1\end{bmatrix}\end{pmatrix}
+\end{equation}
+
+$REF$ \emph{is} is not in RREF.
 
 %%%%%%%%%%%%%%
 \end{document}

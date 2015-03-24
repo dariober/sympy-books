@@ -122,7 +122,7 @@ plt.close()
 
 
 \subsection{Further Properties of Vectors}
-========================================
+% ========================================
 
 \subsubsection{Exercise 2.2.1}
 
@@ -197,11 +197,372 @@ ksol= solve(eq) # [-0.5, 0.5]
 \subsubsection{Exercise 2.2.12: Support vector machine}
 % -----------------------------------------------------
 
-Find the 
+Find the shortest distance between the vector \textbf{u} and the corresponding
+hyperplane. The hyperplane is defined as $\mathbf{v \cdot x} + c = 0$ where
+\textbf{v} is a vector of coefficents for the variables in vector \textbf{x} and
+$c$ is a constant term. The vector \textbf{u} might represent a data point in
+$n$-dimensions.
 
-% \subsection{Linear Independence}
+Remember that an equation in the usual form
+$$ax + by +cz + k = 0$$
+can be represented in matrix form as
+$$ax + by +cz + k
+= \left[\begin{matrix}a\\b\\c\end{matrix}\right] \cdot \left[\begin{matrix}x\\y\\z\end{matrix}\right] + k
+= \mathbf{v} \cdot \mathbf{x} + k
+= 0$$
+
+The shortest distance between \textbf{u} and hyerplane is given by
+
+\begin{equation}\label{eq:ex2_2_12_svm}
+d_{shortest} = \frac{|\mathbf{u \cdot v} + c|}{\|\mathbf{v}\|}
+\end{equation}
+
+Given \textcolor{red}{$\mathbf{u} = (1\ 1)^T$} and hyperplane \textcolor{blue}{$y= x + 1$}, find the shortes
+distance. For this we need to extract the vector of coefficents \textbf{v} from $y= x + 1$, which for convenience can be
+re-arranged as $x - y + 1 = 0$.
+The coeffients \textbf{v} are $\left[\begin{matrix}1\ \mathit{x} \\ -1\ \mathit{y} \end{matrix}\right]$.
+
+Putting it all together:
+
+\begin{equation}
+d_{shortest} = \frac{
+    |\left[\begin{matrix}1\\1\end{matrix}\right] \cdot \left[\begin{matrix}1\\-1\end{matrix}\right] + 1|
+}{
+    \|\left[\begin{matrix}1\\-1\end{matrix}\right]\|
+} = \frac{\sqrt{2}}{2} \approx 0.707
+\end{equation}
+
+\includegraphics[width=0.75\linewidth]{figs/ex2_2_12_svm.pdf}
+
+\begin{verbatim}
+u= Matrix([1, 1])
+hyp= Eq(x + 1, y)
+
+# 1. Re-arrange hyp to have x + y + c= 0
+hyp2= Eq(hyp.lhs - hyp.rhs)
+
+# 2. Re-arrange in matrix form
+cfdict= hyp2.lhs.as_expr().as_coefficients_dict()
+v= Matrix([cfdict[x], cfdict[y]])
+c= cfdict[numbers.One()]
+d_shortest= abs(u.dot(v) + c) / v.norm()
+\end{verbatim}
+
+Plotted with:
+
+\begin{verbatim}
+plt.plot([-1, 2], [hyp.lhs.subs(x, -2), hyp.lhs.subs(x, 2)], 'b-', lw= 2)
+plt.arrow(0, 0, float(u[0]), float(u[1]), lw= 2, color= 'red')
+plt.grid()
+plt.xlim([-0.5, 1.5])
+plt.ylim([-0.5, 1.5])
+plt.savefig('figs/ex2_2_12_svm.pdf')
+plt.close()
+\end{verbatim}
+
+\subsubsection{Exercise 2.2.12d}
+% ------------------------------
+
+For $\mathbf{u} = \left[\begin{matrix}1\\2\\3\\4\end{matrix}\right]$ and
+$x + 2y + z + w = 10$. We have
+
+$$
+d_{shortest}
+= \frac{|\mathbf{u} \cdot \mathbf{v} + c|}{\|\mathbf{v}\|}
+= \frac{|\left[\begin{matrix}1\\2\\3\\4\end{matrix}\right] \cdot \left[\begin{matrix}1\\2\\1\\1\end{matrix}\right] - 10|}{\|\left[\begin{matrix}1\\2\\1\\1\end{matrix}\right]\|}
+= \frac{2 \sqrt{7}}{7}
+\approx 0.76
+$$
+
+\begin{verbatim}
+x,y,z,w = symbols('x y z w')
+u = Matrix([1,2,3,4])
+hyp= Eq(x + 2*y + z + w, 10)
+
+hyp= hyp.lhs - hyp.rhs
+v= [hyp.as_coefficients_dict()[t] for t in (x, y, z, w)]
+v= Matrix(v)
+c= hyp.as_coefficients_dict()[numbers.One()]
+
+d_shortest= abs(u.dot(v) + c) / v.norm()
+\end{verbatim}
+
+\subsection{Linear Independence}
 % ==============================
 
-% \subsection{Basis and Spanning Set}
+\subsubsection{Exercise 2.3.1}
+% ----------------------------
+
+Determine which vectors in $\mathbb{R}^2$ are \textbf{linearly dependent}.
+
+The linear combination of vectors \textbf{u} and \textbf{v} is
+
+\begin{equation}\label{eq:ex2_3_1}
+k\mathbf{u} + c\mathbf{v} = \mathbf{O}
+\end{equation}
+
+Or more verbose:
+
+\begin{equation}\label{eq:ex2_3_1_II}
+k \left[\begin{matrix}x_1\\x_2\end{matrix}\right] +
+c \left[\begin{matrix}y_1\\y_2\end{matrix}\right] =
+\left[\begin{matrix}0\\0\end{matrix}\right]
+\end{equation}
+
+Where $k$ and $c$ are scalars (unknown coefficients). If \ref{eq:ex2_3_1} is
+satisfied for $k \neq 0$ or $c \neq 0$ then \textbf{u} and \textbf{v} are
+linearly dependent. Which means that \textbf{u} can be expressed as \textbf{v} times
+a scalar, or vice versa.
+
+Expressed as a system of equations, \ref{eq:ex2_3_1_II} becomes:
+
+\begin{equation}
+\begin{matrix}
+kx_1 + cy_1 = 0 \\
+kx_2 + cy_2 = 0
+\end{matrix}
+\end{equation}
+
+Now solve this system and check whether $k=0$ and $c=0$ are the only solutions.
+
+For $\mathbf{u} = \left[\begin{matrix}6\\10\end{matrix}\right]$  and
+$\mathbf{v} = \left[\begin{matrix}-3\\-5\end{matrix}\right]$ we have:
+
+$$
+k \left[\begin{matrix}6\\10\end{matrix}\right] + c \left[\begin{matrix}-3\\-5\end{matrix}\right] = \left[\begin{matrix}0\\0\end{matrix}\right]
+$$
+
+re-arranged as a system
+
+$$
+\begin{matrix}6 k - 3 c = 0\\10 k - 5 c = 0\end{matrix}
+$$
+
+With solutions $\begin{bmatrix}\begin{Bmatrix}k : \frac{c}{2}\end{Bmatrix}, & \begin{Bmatrix}c : 2 k\end{Bmatrix}\end{bmatrix}$
+which hold for $c$ and $k$ different from 0.
+
+\begin{verbatim}
+u= Matrix([6, 10])
+v= Matrix([-3, -5])
+eq1= Eq(k * u[0] + c * v[0], 0)
+eq2= Eq(k * u[1] + c * v[1], 0)
+
+csol= solve([eq1, eq2], c)
+ksol= solve([eq1, eq2], k)
+\end{verbatim}
+
+Note that the conclusion of linear dependence can be reached by looking at the
+rank of the matrix $\mathbf{A}= \left[\begin{matrix}\mathbf{u} & \mathbf{v}\end{matrix}\right]$.
+In fact, $rank(\mathbf{A})$ is less than 2.
+
+$$
+\mathbf{A} = \left[\begin{matrix}\mathbf{u} & \mathbf{v}\end{matrix}\right]
+= \left[\begin{matrix}6 & -3\\10 & -5\end{matrix}\right]
+$$
+
+with $rank(\mathbf{A}) = 1$. Note that trying to solve \textbf{A} results in
+\sympy error \textcolor{red}{\texttt{ValueError: Matrix det == 0; not invertible.}}
+
+In addition, note that the RREF has only one leading row:
+
+$$
+\mathbf{A_{rref}} = \begin{pmatrix}\left[\begin{matrix}1 & - \frac{1}{2} & 0\\0 & 0 & 0\end{matrix}\right], & \begin{bmatrix}0\end{bmatrix}\end{pmatrix}
+$$
+
+\begin{verbatim}
+A= v.col_insert(0, u)
+A_rank= A.rank() # 1
+
+try:
+    A.solve(Matrix([0, 0])) # Matrix det == 0; not invertible.
+except ValueError, e:
+    print e
+    
+A_rref= A.col_insert(2, Matrix([0,0])).rref()
+\end{verbatim}
+
+Unit vectors $\mathbf{e_1} = \left[\begin{matrix}1\\0\end{matrix}\right]$ and
+$\mathbf{e_2} = \left[\begin{matrix}0\\1\end{matrix}\right]$ are linearly independent.
+Note that $rank(\mathbf{A}) = N_{dimensions} = 2$ and the RREF is complete
+
+$$
+\mathbf{A_{rref}} = \begin{pmatrix}\left[\begin{matrix}1 & 0 & 0\\0 & 1 & 0\end{matrix}\right], & \begin{bmatrix}0, & 1\end{bmatrix}\end{pmatrix}
+$$
+
+\begin{verbatim}
+k, c= symbols('k c')
+e1= Matrix([1, 0])
+e2= Matrix([0, 1])
+
+eq1= Eq(k * e1[0] + c * e1[1], 0)
+eq2= Eq(k * e2[0] + c * e2[1], 0)
+
+solve([eq1, eq2]) # {c: 0, k: 0}
+
+# Also
+A= e2.col_insert(0, e1)
+A_rank= A.rank() # 2
+
+A_rref= A.col_insert(2, Matrix([0,0])).rref()
+\end{verbatim}
+
+\subsubsection{Exercise 2.3.12 - \textit{incomplete}}
+% ---------------------------------------------------
+
+Determine the value of $t$ in the \textbf{linearly independent} vectors
+
+$$
+\mathbf{u} = \left[\begin{matrix}t\\1\\1\end{matrix}\right],
+\mathbf{v} = \left[\begin{matrix}-1\\t\\1\end{matrix}\right],
+\mathbf{w} = \left[\begin{matrix}1\\1\\t\end{matrix}\right],
+$$
+
+The RREF of the augmented matrix is:
+
+$$
+\mathbf{A_{rref} = \begin{pmatrix}\left[\begin{matrix}1 & 0 & 0 & 0\\0 & 1 & 0 & 0\\0 & 0 & 1 & 0\end{matrix}\right], & \begin{bmatrix}0, & 1, & 2\end{bmatrix}\end{pmatrix}}
+$$
+
+which implies that either the coefficients $k_1 = k_2 = k_3 = 0$ or $t$
+
+\begin{verbatim}
+t, k1, k2, k3= symbols('t k1 k2 k3', real= True)
+
+u= Matrix([ t, 1, 1]) # k1
+v= Matrix([-1, t, 1]) # k2
+w= Matrix([ 1, 1, t]) # k3
+
+eq1= Eq(k1*t - k2   + k3,   0)
+eq2= Eq(k1   + k2*t + k3,   0)
+eq3= Eq(k1   + k2   + k3*t, 0)
+
+A= w.col_insert(0, v).col_insert(0, u)
+Au= Matrix([0,0,0]).col_insert(0, A)
+A_rref= Au.rref()
+\end{verbatim}
+
+\subsection{Basis and Spanning Set}
 % =================================
+
+\subsubsection{Example 2.17}
+% ----------------------------
+
+Determine whether the vectors $\mathbf{u} = \left[\begin{matrix}1\\2\end{matrix}\right]$
+and $\mathbf{v} = \left[\begin{matrix}-1\\1\end{matrix}\right]$ \textbf{span} $\mathbb{R}^2$.
+In other words, the question is whether with the axis \textbf{u} and \textbf{v}
+we can draw any vector in $\mathbb{R}^2$. In other words again, can any vector in
+$\mathbb{R}^2$ be defined as a \emph{\textbf{linear combination}} of \textbf{u} and \textbf{v}?
+
+So let's take a generic vector in $\mathbb{R}^2$ $\mathbf{w} = \left[\begin{matrix}a\\b\end{matrix}\right]$
+and see if the equation
+
+\begin{equation}\label{eq:example_2_17}
+\mathbf{w} = k\mathbf{u}  + c\mathbf{v}
+\end{equation}
+
+can be solved to find the coefficients \textbf{k} and \textbf{c}.
+If the answer is yes, than the generc vector \textbf{w} can be defined in terms
+of \textbf{u} and \textbf{v} given appropriate coefficients $k$ and $c$ respectively.
+
+To solve \ref{eq:example_2_17} build the augmented matrix
+
+$$\mathbf{A} =
+\left[\begin{matrix}1 & -1 & a\\2 & 1 & b\end{matrix}\right]$$,
+
+put in RREF and see if the RREF is complete. In this case
+
+$$\mathbf{A_{rref}} = \left[\begin{matrix}1 & 0 & \frac{a}{3} + \frac{b}{3}\\0 & 1 & - \frac{2 a}{3} + \frac{b}{3}\end{matrix}\right]$$
+
+The coefficients \textbf{k} and \textbf{c} are given as the last column
+
+\begin{equation}\label{eq:example_2_17_ii}
+k, c= \left[\begin{matrix}\frac{a}{3} + \frac{b}{3}\\- \frac{2 a}{3} + \frac{b}{3}\end{matrix}\right]
+\end{equation}
+
+Here $a$ and $b$ can be thought as increments on the $x$ and $y$ axis.
+
+For example, how do we express the vector $\mathbf{g} = \left[\begin{matrix}3\\2\end{matrix}\right]$
+in the \textbf{spanning set} \textbf{u} and \textbf{v}? By substituting in \ref{eq:example_2_17_ii}
+3 for $a$ and 2 for $b$ we get the coefficients $k= 5/3$ and $c = -4/3$. Therefore
+
+\begin{align}
+\mathbf{g} = \left[\begin{matrix}3\\2\end{matrix}\right]
+= k\mathbf{u} + c\mathbf{v} \\
+= \left[\begin{matrix}\frac{a}{3} + \frac{b}{3}\end{matrix}\right] \mathbf{u} + \left[\begin{matrix}- \frac{2 a}{3} + \frac{b}{3} \mathbf{v}\end{matrix}\right] \\
+= \left[\begin{matrix}\frac{3}{3} + \frac{2}{3}\end{matrix}\right] \mathbf{u} + \left[\begin{matrix}- \frac{2 \cdot 3}{3} + \frac{2}{3} \mathbf{v}\end{matrix}\right] \\
+= 5/3 \mathbf{u} + -4/3 \mathbf{v} \\
+= \left[\begin{matrix}3\\2\end{matrix}\right]
+\end{align}
+
+\begin{verbatim}
+a,b,c,k= symbols('a b c k')
+
+u= Matrix([1, 2])
+v= Matrix([-1, 1])
+w= Matrix([a, b])
+
+A= w.col_insert(0, v).col_insert(0, u)
+A_rref= A.rref()
+
+# Coefficients
+k, c= A_rref[0].col(- 1)
+
+# Or maybe easier using M.solve(const)
+A= v.col_insert(0, u)
+k, c= A.solve(w)
+
+## Represent g in spanning set (u, v)
+g= Matrix([3, 2])
+k2= k.subs({a:g[0], b:g[1]})
+c2= c.subs({a:g[0], b:g[1]})
+g2= k2 * u + c2 * v
+\end{verbatim}
+
+\subsubsection{Exercise 2.4.1}
+% ----------------------------
+
+Determine whether the following vectors span $\mathbb{R}^2$
+
+\begin{verbatim}
+# Generic vector
+w= Matrix([a, b])
+
+e1= Matrix([1, 0])
+e2= Matrix([0, 1])
+
+A= w.col_insert(0, e2).col_insert(0, e1)
+\end{verbatim}
+
+For unit vectors $\mathbf{e_1}$ and $\mathbf{e_2}$ the answer is yes with
+coefficient a and b from RREF
+
+$$
+\mathbf{A_{rref}} = \left[\begin{matrix}1 & 0 & a\\0 & 1 & b\end{matrix}\right]
+$$
+
+These vectors do not form a spanning set as a generic vector \textbf{w} cannot be formed
+by linear combination. The augmented matrix cannot be in RREF:
+
+$$
+\mathbf{A_{rref}} = \left[\begin{matrix}1 & - \frac{1}{2} & 0\\0 & 0 & 1\end{matrix}\right]
+$$
+
+Trying to solve the augmented matrix \textcolor{red}{\texttt{ValueError: Matrix det == 0; not invertible.}}
+
+$$
+\mathbf{A} = \left[\begin{matrix}2 & -1 & a\\2 & -1 & b\end{matrix}\right]
+$$
+
+Results in 
+
+\begin{verbatim}
+u= Matrix([2, 2])
+v= Matrix([-1, -1])
+A= w.col_insert(0, v).col_insert(0, u)
+A.rref() # Not in RREF
+
+# Indeed:
+A= v.col_insert(0, u)
+A.solve(w) # ValueError: Matrix det == 0; not invertible.
+\end{verbatim}
 

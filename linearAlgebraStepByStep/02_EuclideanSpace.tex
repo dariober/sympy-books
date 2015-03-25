@@ -566,3 +566,193 @@ A= v.col_insert(0, u)
 A.solve(w) # ValueError: Matrix det == 0; not invertible.
 \end{verbatim}
 
+\subsubsection{Exercise 2.4.2}
+% ----------------------------
+
+Determine whether the following vectors span $\mathbb{R}^3$
+
+\begin{verbatim}
+u= Matrix([1, 2, 1])
+v= Matrix([2, 4, 0])
+w= Matrix([-2, -2, 3])
+\end{verbatim}
+
+So, let's define a generic vector in $\mathbb{R}^3$
+
+\begin{verbatim}
+a,b,c= symbols('a b c')
+g= Matrix([a, b, c])
+\end{verbatim}
+
+and define \textbf{g} as a linear combination of \textbf{u, v, w}
+\emph{i.e.}
+$$ \mathbf{g}= k\mathbf{u} + j\textbf{v} + l\mathbf{w}$$
+
+Can we solve these linear system to find the unknow $k, j, l$?
+
+To answer, prepare the augmented matrix (not really necessary to prepare it though).
+Note the use of \texttt{numpy.hstack} to column-bind vectors. Now try to solve it
+
+\begin{verbatim}
+A= Matrix(numpy.hstack((u, v, w, g)))
+sol= A[:, :-1].solve(A[:, -1])
+\end{verbatim}
+
+The syntax to slice the matrix comes from \href{http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html}{NumPy}:
+\textcolor{blue}{\texttt{A[:, :-1]}} means get all rows with ':' (1st index) and all columns
+excluding the last one with ':-1'.
+
+Anyway, the solution exists and is
+
+$$
+k, j, l= \left[\begin{matrix}3 a - \frac{3 b}{2} + c\\- 2 a + \frac{5 b}{4} - \frac{c}{2}\\- a + \frac{b}{2}\end{matrix}\right]
+$$
+
+so \textbf{u, v, w} are spanning set of $\mathbb{R}^3$
+
+\subsubsection{Exercise 2.4.3}
+% ----------------------------
+
+Determine whether the following vectors form a \textbf{\textit{basis}} for $\mathbb{R}^2$
+
+\begin{verbatim}
+u= Matrix([1, 2])
+v= Matrix([0, 1])
+\end{verbatim}
+
+A \textbf{\textit{basis}} is a spanning set whose vectors are also linearly independent.
+This means that a basis is the minimal set of vectors necessary to describe the
+$\mathbb{R}^n$ space. Note that if the vectors span $\mathbb{R}^n$ than they are
+linearly independent and \emph{vice versa}. So we need to check only one of the two
+conditions.
+
+In the case above we have linearl independence since:
+
+$$
+A = \left[\begin{matrix}u\\v\end{matrix}\right]
+= \left[\begin{matrix}0 & 1\\1 & 2\end{matrix}\right]
+$$
+
+and a solution can be found:
+
+$$
+a, b= \left[\begin{matrix}- 2 a + b\\a\end{matrix}\right]
+$$
+
+\begin{verbatim}
+A= Matrix(numpy.array((u, v)))
+sol= A.solve(Matrix([a, b]))
+A.rank() == A.rows # True (2)
+A.det() != 0 # True
+A.rref() 
+\end{verbatim}
+
+Note also that $rank(A) = 2$, \emph{i.e.} \textbf{A} is full rank and the RREF
+is complete $\left[\begin{matrix}1 & 0\\0 & 1\end{matrix}\right]$
+
+In this case, there is no linear independence and the vectors are not a basis:
+
+\begin{verbatim}
+u= Matrix([-2, -4])
+v= Matrix([1, 2])
+A= Matrix(numpy.array((u, v)))
+sol= A.solve(Matrix([a, b]))  ## ValueError: Matrix det == 0; not invertible.
+A.rank() == A.rows # False
+A.det() == 0 # True
+\end{verbatim}
+
+\subsubsection{Exercise 2.4.4}
+% ----------------------------
+
+Do these vector form a basis for $\mathbb{R}^4$?
+
+\begin{verbatim}
+u= Matrix([1, 1, 1, 1])
+v= Matrix([1, 1, 0, -1])
+w= Matrix([-1, -2, -3, 4])
+x= Matrix([2, 2, 2, 2])
+A= Matrix(numpy.hstack([u, v, w, x]))
+\end{verbatim}
+
+No since they are not linearly independent. In fact u and x are multiple of each other.
+
+\subsubsection{Exercise 2.4.5}
+% ----------------------------
+
+Is \textbf{b} in the space spanned by the columns of matrix \textbf{A}?
+
+\begin{equation}
+\mathbf{A} = \left[\begin{matrix}1 & 1 & 0\\2 & 5 & 0\\3 & 4 & 9\end{matrix}\right];
+\mathbf{b} = \left[\begin{matrix}1\\3\\4\end{matrix}\right]
+\end{equation}
+
+To answer we want to know whether the columns of \textbf{A} can be linearly combined
+to produce \textbf{b}. Can we found a vector \textbf{k} of coefficients for the
+columns in \textbf{A} that produce \textbf{b}?
+So we want ot see if we can solve $\mathbf{Ak} = \mathbf{b}$ \emph{w.r.t.} \textbf{k}.
+\emph{I.e.} let's try to solve $\mathbf{k}= \mathbf{A}^{-1}\mathbf{b}$. We can solve it
+for $\mathbf{k} = \left[\begin{matrix}\frac{2}{3}\\\frac{1}{3}\\\frac{2}{27}\end{matrix}\right]$.
+
+We can also verify that $\mathbf{Ak} = \mathbf{b}$.
+
+\begin{verbatim}
+A= Matrix([[1, 1, 0], [2, 5, 0], [3, 4, 9]])
+b= Matrix([1, 3, 4])
+
+k= A.inv().dot(b)
+# The same:
+k= A.solve(b)
+
+# Check back:
+b == Matrix(A.dot(k))
+\end{verbatim}
+
+What about this case:
+
+\begin{verbatim}
+A= Matrix([[1, 2, 3],
+           [4, 5, 6],
+           [7, 8, 9]])
+b= Matrix([1, 3, 4])
+A.inv() ## ValueError: Matrix det == 0; not invertible.
+A.solve(b) ## The same
+\end{verbatim}
+
+\texttt{ValueError: Matrix det == 0; not invertible}, in fact the columns of \textbf{A}
+are not linearly independent we cannot find a vector of coefficients \textbf{k} 
+to represent \textbf{b}.
+
+\begin{verbatim}
+\end{verbatim}
+
+\subsubsection{Exercise 2.4.6}
+% ----------------------------
+
+Are these vectors a basis for $mathbb{R}^3$?
+
+\begin{verbatim}
+u= Matrix([5, 0, 0])
+v= Matrix([0, 6, 0])
+w= Matrix([0, 0, 7])
+A= Matrix(numpy.hstack([u, v, w]))
+A.solve(Matrix([a, b, c])) ## Solvable -> lin. indep. -> basis
+\end{verbatim}
+
+What about:
+
+\begin{verbatim}
+alpha, beta, lamda= symbols('alpha beta lamda', real= True, nonzero= True)
+u= Matrix([alpha, 0, 0])
+v= Matrix([0, beta, 0])
+w= Matrix([0, 0, lamda])
+A= Matrix(numpy.hstack([u, v, w]))
+A.solve(Matrix([a, b, c])) ## Solvable -> lin. indep. -> basis
+
+# Also:
+A.inv() # Ok
+A.rank() == 3 # True
+A.det() != 0 # True
+\end{verbatim}
+
+\subsubsection{Exercise 2.4.9}
+% ----------------------------

@@ -12,6 +12,8 @@
 \setcounter{tocdepth}{2}
 
 \newcommand{\sympy}{\textbf{\texttt{\textcolor{OliveGreen}{SymPy}} }}
+\newcommand{\cmd}[1]{\textbf{\texttt{\textcolor{blue}{#1}}}}
+
 
 \begin{document}
 % ******************************************************************************
@@ -27,8 +29,23 @@ with \sympy implementation.
 \end{abstract}
 
 % ==============================================================================
+
+Start session with interactive \texttt{python} as:
+
+\begin{verbatim}
+ipython
+from sympy import *
+from matplotlib import pylab as plt
+
+init_printing()
+\end{verbatim}
+
+Starting \texttt{isympy} seems to interfere with \texttt{matplotlib} later.
+
 \input{01_LinearEquationsAndMatrices.tex}
 \input{02_EuclideanSpace.tex}
+\input{05_LinearTransformations.tex}
 
+\input{99_Appendix.tex}
 
 \end{document}

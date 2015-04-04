@@ -264,3 +264,22 @@ $$
 \sympy returns \texttt{None} and this might be ok since \emph{$[$\texttt{Function.equals} returns$]$ None
 (instead of T/F) for an expression that *is* zero but won't simplify to zero.}
 (See \href{https://groups.google.com/forum/#!topic/sympy/xP_uM49pXeo}{\sympy discussion group})
+
+\subsection{5.2 Kernel and range of a linear transformation}
+% ==========================================================
+
+The \textbf{kernel} of a linear transformation is the set of domain (starting)
+values which map to zero in the codomain (arrival). \emph{I.e.} the kernel of
+$T$ is:
+
+$$
+T(\mathbf{v}) = \mathbf{O})
+$$
+
+The \textbf{range} or \textbf{image} of a linear transformation is the
+subset of values in the codomain $W$ where a linear transformation $T$ can arrive.
+Formally:
+
+$$
+range(T) = {T(\mathbf{v}) | \mathbf{v} in V}
+$$

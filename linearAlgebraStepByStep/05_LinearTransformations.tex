@@ -281,5 +281,163 @@ subset of values in the codomain $W$ where a linear transformation $T$ can arriv
 Formally:
 
 $$
-range(T) = {T(\mathbf{v}) | \mathbf{v} in V}
+range(T) = \{ T(\mathbf{v}) | \mathbf{v}\ in\ V \}
 $$
+
+The \emph{range} answers the question: I have this linear transformation $T$ from
+domain $V$ to codomain $W$. Which is the set of arrival values in $W$ that I can
+produce with $T$?
+
+\subsubsection{Exercise 5.2.1}
+%-----------------------------
+
+Find the kernel of the transformation in $\mathbb{R}^2 \rightarrow \mathbb{R}^2$
+given by $T(\mathbf{v}) = \mathbf{Av}$ with $\mathbf{A} = \left[\begin{matrix}1 & 0\\0 & 1\end{matrix}\right]$.
+
+The task is finding the solution to the equation $T(v) = 0$. In this case:
+
+$$
+ker(T)= \left[\begin{matrix}x\\y\end{matrix}\right] = \left[\begin{matrix}0\\0\end{matrix}\right]
+$$
+
+\begin{verbatim}
+def T(v):
+    A= eye(2)
+    return A * v
+
+v= Matrix([x, y])
+z= Matrix([0, 0])
+ker= solve( Eq(T(v), z) )
+\end{verbatim}
+
+Find the kernel of the transformation $T$ in $\mathbb{R}^3 \rightarrow \mathbb{R}^2$
+
+$$
+T(\left[\begin{matrix}x\\y\\z\end{matrix}\right]) = \left[\begin{matrix}y - z\\x - z\end{matrix}\right]
+$$
+
+We need to solve the equation $T(v) = \mathbf{O}$. Solutions are
+$\left \{ x : z, \quad y : z\right \}$, that is any value of $z in \mathbb{R}$
+makes $T(v) = \mathbf{O}$. Therefore the kernel of $T$ is
+
+$$
+ker(T) = \left[\begin{matrix}z\\z\\z\end{matrix}\right] = r \left[\begin{matrix}1\\1\\1\end{matrix}\right]
+\mid r \in \mathbb{R}
+$$
+
+Note that the kernel is defined in the domain space, $\mathbb{R}^3$ here, not in the
+codomain. 
+
+\begin{verbatim}
+x,y,z= symbols('x y z')
+def T(v):
+    return Matrix([v[1] - v[2],
+                   v[0] - v[2]])
+
+v= Matrix([x, y, z])
+
+ker= solve( Eq(T(v), Matrix([0, 0])) )
+\end{verbatim}
+
+\subsubsection{Exercise 5.2.3}
+%-----------------------------
+
+What is the kernel of the differentiation? \emph{I.e.} the linear transformation
+is $T(\mathbf{p}) = p\prime(x)$. What polynomials produce zero after differentiation?
+
+The answer is the constant polynomial $c$ (the first derivative of a constant is
+zero). To show this in $P^2$ get a generic polynomial of order 2 $p= a x^2 + b x + c$,
+obtain the first derivative, $p\prime= 2 a x + b$, and see which set of values for $a$ and
+$b$ make $p\prime= 0$. The answer is $a= 0;\ b= 0$. By substituting a and b in
+the original polynomial $p$ we obtain the kernel of $p$:
+$$
+ker(p) = 0 x^2 + 0 x + c = c
+$$
+
+\begin{verbatim}
+def T(p):
+    return p.diff(x)
+
+a,b,c,x= symbols('a b c x')
+p= a*x**2 + b*x + c
+
+eq= Eq(T(p), 0)
+sols= solve(eq, [a, b])
+
+ker= p.subs({a: sols[a], b: sols[b]}) # ker= c
+\end{verbatim}
+
+In polynomial space of order 3 $P^3 \rightarrow P^1$ it is the same:
+
+\begin{verbatim}
+a,b,c,d,x= symbols('a b c d x')
+p= a*x**3 + b*x**2 + c*x + d
+eq= Eq(T(p), 0)
+sols= solve(eq, [a, b, c])
+ker= p.subs({a: sols[a], b: sols[b], c: sols[c]}) # ker= d
+\end{verbatim}
+
+What is the \emph{range} of $T(\mathbf{p}) = p\prime(x)$? The transformation
+differentiation produces the polynomial $2ax + b$, so the range of the differenatiation
+is the generic is set of polynomials of order 1 (for domain polynomial of
+order 2).
+
+\subsection{5.3 Rank of a linear transformation}
+% ==============================================
+
+The rank of a matrix is the number of linearly independent rows and it can be thought
+of as a measure of redundancy of a matrix. If the rank is much lower than the number
+of rows, many rows are redundant.
+
+The rank of a linear transformation is the dimension of transformation's range.
+In practice, it tells how much information has been lost.
+
+\subsubsection{Exercise 5.3.1}
+%-----------------------------
+
+For the linear transformations $T(\mathbf{v}) = \mathbf{Av}$ with $\mathbf{A} = \left[\begin{matrix}1 & 2\\1 & 2\end{matrix}\right]$ determine
+
+\begin{itemize}
+\item $kernel(T)$
+
+The solution to $T(\mathbf{v})=\mathbf{O}$ is $\left \{ x : - 2 y\right \}$.
+Substituting the $x= -2y$ in the generic vector we get
+$\mathbf{v} = \left[\begin{matrix}- 2 y\\y\end{matrix}\right]$ or in general terms
+$kernel(T) = \left[\begin{matrix}- 2 r\\r\end{matrix}\right]$ or
+$kernel(T) = r \left[\begin{matrix}- 2 \\1\end{matrix}\right]$. This means that
+the vector $[-2\ 1]^T$ multplied for any real $r$ returns the kernel of $T$.
+
+\item $nullity(T)$
+The nullity of T is the dimension of $kernel(T)$. From above $kernel(T)$ contains
+\textbf{one} vector (actually one vector in a basis of $kernel(T)$) then the nullity
+is 1.
+
+\item $range(T)$
+The range is the output of $T$, which is $range(T) = \left[\begin{matrix}x + 2 y\\x + 2 y\end{matrix}\right]$.
+The output is defined for any real number for both dimensions.
+
+\item $rank(T)$
+The rank is the dimension of the range. There is one vector in the range, so the rank
+is 1.
+\end{itemize}
+
+
+\begin{verbatim}
+def T(v):
+    A= Matrix(2, 2, [1, 2, 1, 2])
+    return A*v
+
+x, y, r= symbols('x y r')
+v= Matrix([x, y])
+
+## Kernel
+xsol= solve( Eq(T(v), zeros(v.rows, 1)), x )
+ker= v.subs(xsol).subs(y, r) / r
+
+## Nullity
+
+## Range: Generic output of T(v):
+print T(v)
+
+## Rank(T)
+\end{verbatim}

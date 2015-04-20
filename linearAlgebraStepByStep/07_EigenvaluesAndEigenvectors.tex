@@ -1,0 +1,71 @@
+\section{7. Eigenvalues and Eigenvectors}
+% ***************************************
+
+\subsection{Introduction to eigenvalues and eigenvectors}
+% =======================================================
+
+Eigenvector \textbf{u} and eigenvalue $\lambda$ of a square matrix \textbf{A} is a 
+of vector and matched scalar value so that
+$$\mathbf{Au} = \lambda\mathbf{u}
+$$
+If you imagine the matrix \textbf{A} as a transformation, \textbf{u} is that vector that transformed
+by \textbf{A} is only shrank or extended in length, but it is not rotated or transposed.
+The magnitude of extension/shrinkage that \textbf{A} applies to \textbf{u} is the
+scalar value $\lambda$, the eigenvalue.
+
+The eigenvalues are found by applying the \textbf{characteristic equation}
+
+$$
+det(\mathbf{A - I}\lambda) = \mathbf{0}
+$$
+
+Where does the characteristic equation come from? Consider the following re-arragments:
+
+$\mathbf{Au} = \lambda\mathbf{u} \rightarrow$
+
+$\mathbf{Au} = \lambda\mathbf{Iu}$ \emph{multiply by \textbf{I} doesn't change anything}
+
+$\mathbf{Au} - \lambda\mathbf{Iu} = \mathbf{0}$
+
+$(\mathbf{A} - \lambda\mathbf{I})\mathbf{u} = \mathbf{0}$ 
+
+Consider the matrix $\mathbf{A} - \lambda\mathbf{I}$, what value of $\lambda$ makes
+this matrix equal to \textbf{0}? Answer, solve $det(\mathbf{A} - \lambda\mathbf{I}) = \mathbf{0}$
+for $\lambda$.
+
+\subsubsection{Exercise 7.1.1.}
+
+Find the eigenvalues and eigenvectors of the matrix
+$\mathbf{A} = \left[\begin{matrix}7 & 3\\0 & -4\end{matrix}\right]$.
+
+First find the eigenvalue(s) by setting
+$$
+det(\mathbf{A - I}\lambda) =
+det(\left[\begin{matrix}7 & 3\\0 & -4\end{matrix}\right] - \left[\begin{matrix}\lambda & 0\\0 & \lambda\end{matrix}\right]) =
+det(\left[\begin{matrix}- \lambda + 7 & 3\\0 & - \lambda - 4\end{matrix}\right]) =
+\lambda^{2} - 3 \lambda - 28 = 0
+$$
+
+Solving $\lambda^{2} - 3 \lambda - 28 = 0$ we find $\lambda = -4; \lambda= 7$.
+
+To find the correspondong eignevectors, substitute $\lambda$ in $\mathbf{Au} = \lambda\mathbf{u}$
+and solve for \textbf{u}.
+
+\begin{verbatim}
+lamda= symbols('lamda')
+A= Matrix(2, 2, [7, 3, 0, -4])
+
+# Find eigenvalue(s)
+deta= det(A - eye(A.rows) * lamda)
+eigval= solve(deta, lamda)
+
+# Find eigenvectors
+u= Matrix(A.rows, 1, symbols('x1:%s' %(A.rows+1)))
+
+eqvec= Eq((A - eigval[1] * eye(A.rows)) * u, zeros(A.rows, 1))
+
+eqvec= Eq((A - eigval[0] * eye(A.rows)) * u, zeros(A.rows, 1))
+
+eigveceq= Eq(A*u, eigval[0]*u)
+solve(eigveceq, u[0])
+\end{verbatim}

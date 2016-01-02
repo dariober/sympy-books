@@ -1,6 +1,6 @@
 ## Examples of using optimization techniques
 
-Compile `.tex` file with
+See pdf [optimization.pdf](optimization.pdf) or compile `.tex` file with
 
 ```
 pdflatex optimization.tex
